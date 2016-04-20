@@ -5,6 +5,7 @@ class GoogleLogin extends Component {
     callback: PropTypes.func.isRequired,
     clientId: PropTypes.string.isRequired,
     buttonText: PropTypes.string,
+    children: PropTypes.node,
     offline: PropTypes.bool,
     scope: PropTypes.string,
     cssClass: PropTypes.string,
@@ -79,14 +80,15 @@ class GoogleLogin extends Component {
       fontWeight: 'bold',
       fontFamily: 'Roboto'
     };
-    const { cssClass, buttonText } = this.props;
+    const { cssClass, buttonText, children } = this.props;
+    const finalContent = children || buttonText;
     return (
-      <button 
-        className={cssClass} 
+      <button
+        className={cssClass}
         onClick={this.onBtnClick.bind(this)}
-        style={cssClass ? {} : style} 
+        style={cssClass ? {} : style}
       >
-        {buttonText}
+        {finalContent}
       </button>
     );
   }

@@ -10,10 +10,10 @@ module.exports = {
 
   module: {
     loaders: [
-      { 
-        test: /\.js$/, 
-        loader: 'babel', 
-        exclude: /node_modules/ 
+      {
+        test: /\.js$/,
+        loader: 'babel',
+        exclude: /node_modules/
       }
     ]
   },
@@ -35,6 +35,17 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.optimize.DedupePlugin()
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      output: {
+        comments: false
+      }
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {NODE_ENV: JSON.stringify('production')}
+    })
   ]
 };
