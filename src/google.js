@@ -3,6 +3,7 @@ import React, { PropTypes, Component } from 'react';
 class GoogleLogin extends Component {
   static propTypes = {
     callback: PropTypes.func.isRequired,
+    errorCallback: PropTypes.func.isRequired,
     clientId: PropTypes.string.isRequired,
     buttonText: PropTypes.string,
     children: PropTypes.node,
@@ -17,7 +18,8 @@ class GoogleLogin extends Component {
     buttonText: 'Login with Google',
     scope: 'profile email',
     redirectUri: 'postmessage',
-    cookiePolicy: 'single_host_origin'
+    cookiePolicy: 'single_host_origin',
+    errorCallback: (error) => { console.error(error); }
   };
 
   constructor(props) {
@@ -49,7 +51,7 @@ class GoogleLogin extends Component {
 
   onBtnClick() {
     const auth2 = window.gapi.auth2.getAuthInstance();
-    const { offline, redirectUri, callback } = this.props;
+    const { offline, redirectUri, callback, errorCallback } = this.props;
     if (offline) {
       const options = {
         'redirect_uri': redirectUri
@@ -57,11 +59,17 @@ class GoogleLogin extends Component {
       auth2.grantOfflineAccess(options)
         .then((data) => {
           callback(data);
+        })
+        .catch(error => {
+          errorCallback(error);
         });
     } else {
       auth2.signIn()
         .then((response) => {
           callback(response);
+        })
+        .catch(error => {
+          errorCallback(error);
         });
     }
   }
